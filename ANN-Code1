@@ -1,8 +1,8 @@
 %reset -f
 import pandas as pd,os, numpy as np
 
-os.chdir('/home/jai/Documents/DataScience/Deep_Learning_A_Z/Volume 1 - Supervised Deep Learning/Part 1 - Artificial Neural Networks (ANN)/Section 2 - Part 1 - ANN/Artificial_Neural_Networks/')
-ds = pd.read_csv('Churn_Modelling.csv')
+os.chdir(r'C:\Users\Jayasankar.RS\Desktop\Deep_Learning_A_Z\Volume 1 - Supervised Deep Learning\Part 1 - Artificial Neural Networks (ANN)')
+ds = pd.read_csv('Section 2 - Part 1 - ANN\Churn_Modelling.csv')
 #%% Data Preparation
 y = ds.iloc[:,13].values
 X = ds.iloc[:,3:13].values
@@ -28,4 +28,32 @@ sc = StandardScaler()
 X_train = sc.fit_transform(X_train)
 X_test  = sc.fit_transform(X_test)
 
+#%% Creating Layers
+import keras
+from keras.models import Sequential
+from keras.layers import Dense
+
+classifier = Sequential()
+
+## Adding Input layer -  Hidden Layer 1
+classifier.add(Dense(output_dim = 6,init = 'uniform',activation = 'relu',input_dim = 11))
+
+## Hidden Layer 2
+classifier.add(Dense(output_dim = 6,init = 'uniform',activation = 'relu'))
+
+## Output Layer
+classifier.add(Dense(output_dim = 1,init = 'uniform',activation = 'sigmoid'))
+
+#%% Compiling ANN
+classifier.compile(optimizer = 'adam', loss = 'binary_crossentropy',metrics = ['accuracy'])
+
+#%% Fitting ANN
+classifier.fit(X_train,y_train,batch_size = 10, epochs = 100)
+
 #%%
+y_pred = classifier.predict(X_test)
+
+from sklearn.metrics import confusion_matrix
+cm = confusion_matrix(y_test,np.where(y_pred>0.5,1,0))
+cm
+(254+1902)/(254+1902+89+255)
