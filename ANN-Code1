@@ -1,0 +1,31 @@
+%reset -f
+import pandas as pd,os, numpy as np
+
+os.chdir('/home/jai/Documents/DataScience/Deep_Learning_A_Z/Volume 1 - Supervised Deep Learning/Part 1 - Artificial Neural Networks (ANN)/Section 2 - Part 1 - ANN/Artificial_Neural_Networks/')
+ds = pd.read_csv('Churn_Modelling.csv')
+#%% Data Preparation
+y = ds.iloc[:,13].values
+X = ds.iloc[:,3:13].values
+
+## Encode the categorical Data
+from sklearn.preprocessing import LabelEncoder, OneHotEncoder
+labelencoder_X_1 = LabelEncoder()
+labelencoder_X_2 = LabelEncoder()
+X[:,1] = labelencoder_X_1.fit_transform(X[:,1])
+X[:,2] = labelencoder_X_2.fit_transform(X[:,2])
+X
+onehotencoder = OneHotEncoder(categorical_features = [1])
+X = onehotencoder.fit_transform(X).toarray()
+X = X[:,1:]
+## Splitting Dataset into train and test
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(X,y,test_size = 0.25,
+                                                    random_state =0)
+
+## Feature Scaling
+from sklearn.preprocessing import StandardScaler
+sc = StandardScaler()
+X_train = sc.fit_transform(X_train)
+X_test  = sc.fit_transform(X_test)
+
+#%%
